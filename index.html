@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>North Star Bakery | Home</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <img class="site-logo" src="Bakery_c/bakery-logo_c.png"
+           alt="North Star Bakery logo">
+      <nav aria-label="Main navigation">
+      <ul>
+        <li><a href="index.html" aria-current="page">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact and Pre-Orders</a></li>
+      </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Welcome to North Star Bakery</h1>
+    <p class="intro">
+      We make small-batch breads and pastries for our neighbors,
+      commuters, families, and community celebrations.
+    </p>
+
+    <div class="content-grid">
+    <section class="card">
+      <h2>What We Are Known For</h2>
+      <p>
+        Our bakers shape naturally leavened bread each morning and
+        prepare flaky pastries, seasonal cakes, and welcoming service.
+      </p>
+    </section>
+
+    <section class="card featured-card">
+      <h2>Featured Item of the Week</h2>
+      <picture>
+        <source media="(max-width: 600px)"
+                srcset="Bakery_c/bakery-feature-small_c.png">
+        <img src="Bakery_c/bakery-feature-large_c.png"
+             alt="Seasonal berry pastries arranged on a bakery counter">
+      </picture>
+      <h3>Summer Berry Hand Pie</h3>
+      <p>
+        A buttery hand pie filled with berries and finished with a light
+        glaze. Available while supplies last for $5 each.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Hours and Location</h2>
+      <address>
+        214 North Star Avenue<br>
+        Portland, Oregon 97205
+      </address>
+      <p>
+        Monday-Friday: 6:30 a.m.-6:00 p.m.<br>
+        Saturday-Sunday: 7:00 a.m.-4:00 p.m.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Hear Our Welcome Message</h2>
+      <audio controls>
+        <source src="Bakery_c/bakery-welcome_c.mp3"
+                type="audio/mpeg">
+        Your browser does not support the audio element.
+        <a href="Bakery_c/bakery-welcome_c.mp3">
+          Download the North Star Bakery welcome message.
+        </a>
+      </audio>
+    </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 North Star Bakery. Baked for our community.</p>
+  </footer>
+</body>
+</html>
