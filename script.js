@@ -31,7 +31,12 @@ function readJson(key, fallback) {
 }
 
 function writeJson(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 function getProductById(productId) {
@@ -66,7 +71,10 @@ function initializeFavorites() {
   const status = document.querySelector("#favorites-status");
   const addButton = document.querySelector("#add-favorite");
   const clearButton = document.querySelector("#clear-favorites");
-  let favoriteIds = readJson(storageKeys.favorites, []);
+  const storedFavorites = readJson(storageKeys.favorites, []);
+  let favoriteIds = Array.isArray(storedFavorites)
+    ? [...new Set(storedFavorites.filter((id) => getProductById(id)))]
+    : [];
 
   populateProductSelect(select);
   renderFavorites(favoriteIds, list);
@@ -79,9 +87,11 @@ function initializeFavorites() {
     const product = getProductById(productId);
     if (!favoriteIds.includes(productId)) {
       favoriteIds.push(productId);
-      writeJson(storageKeys.favorites, favoriteIds);
+      const saved = writeJson(storageKeys.favorites, favoriteIds);
       renderFavorites(favoriteIds, list);
-      status.textContent = `${product.name} was saved for your next visit.`;
+      status.textContent = saved
+        ? `${product.name} was saved for your next visit.`
+        : `${product.name} was added for this visit. Browser storage is unavailable.`;
     } else {
       status.textContent = `${product.name} is already in your saved list.`;
     }
@@ -89,9 +99,11 @@ function initializeFavorites() {
 
   clearButton.addEventListener("click", () => {
     favoriteIds = [];
-    writeJson(storageKeys.favorites, favoriteIds);
+    const saved = writeJson(storageKeys.favorites, favoriteIds);
     renderFavorites(favoriteIds, list);
-    status.textContent = "Your saved favorites list was cleared.";
+    status.textContent = saved
+      ? "Your saved favorites list was cleared."
+      : "List cleared for this visit. Browser storage could not be updated.";
   });
 }
 
@@ -131,7 +143,7 @@ function validateForm(form) {
     setFieldError(email, validationMessages.emailInvalid);
     isValid = false;
   }
-  if (!pickupDate.value) {
+  if (selectedRequest?.value === "pre-order" && !pickupDate.value) {
     setFieldError(pickupDate, validationMessages.pickupRequired);
     isValid = false;
   }
@@ -153,8 +165,9 @@ function validateForm(form) {
 
 function restoreCustomerProfile(form) {
   const customer = readJson(storageKeys.customer, {});
-  if (customer.name) form.elements.name.value = customer.name;
-  if (customer.email) form.elements.email.value = customer.email;
+  if (!customer || typeof customer !== "object" || Array.isArray(customer)) return;
+  if (typeof customer.name === "string") form.elements.name.value = customer.name;
+  if (typeof customer.email === "string") form.elements.email.value = customer.email;
 }
 
 function initializeForm() {
@@ -163,6 +176,14 @@ function initializeForm() {
 
   const status = document.querySelector("#form-status");
   restoreCustomerProfile(form);
+  const pickupDate = form.elements["pickup-date"];
+  const requestOptions = Array.from(form.querySelectorAll('input[name="request-type"]'));
+  function updatePickupRequirement() {
+    pickupDate.required = form.querySelector('input[name="request-type"]:checked')?.value === "pre-order";
+    if (!pickupDate.required) clearFieldError(pickupDate);
+  }
+  requestOptions.forEach((option) => option.addEventListener("change", updatePickupRequirement));
+  updatePickupRequirement();
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -176,8 +197,10 @@ function initializeForm() {
       name: form.elements.name.value.trim(),
       email: form.elements.email.value.trim()
     };
-    writeJson(storageKeys.customer, customer);
-    status.textContent = "Your request is ready. Your name and email were saved on this browser for next time.";
+    const saved = writeJson(storageKeys.customer, customer);
+    status.textContent = saved
+      ? "Your entries passed validation. Name and email saved for next time. This demo does not send requests to the bakery."
+      : "Your entries passed validation. Browser storage is unavailable. This demo does not send requests to the bakery.";
   });
 }
 

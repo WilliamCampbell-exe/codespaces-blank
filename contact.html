@@ -48,7 +48,7 @@
 
     <section class="card featured-card">
       <h2>Inquiry and Pre-Order Request</h2>
-      <p>Fields marked required must be completed before submission.</p>
+      <p>Name, email, request type, and item details are required. A pickup date is required for pre-orders only. This classroom demo validates entries locally; it does not send requests.</p>
 
       <form id="preorder-form" action="#" method="post" novalidate>
         <fieldset>
@@ -69,13 +69,13 @@
         <fieldset>
           <legend>Request Details</legend>
 
-          <label for="pickup-date">Preferred pickup date</label>
+          <label for="pickup-date">Preferred pickup date (pre-orders only)</label>
           <input type="date" id="pickup-date" name="pickup-date"
                  required>
           <span class="error-message" id="pickup-date-error"></span>
 
           <p>Request type</p>
-          <div class="radio-group">
+          <div class="radio-group" role="group" aria-label="Request type" aria-describedby="request-type-error">
           <input type="radio" id="pre-order" name="request-type"
                  value="pre-order" required>
           <label for="pre-order">Pre-order</label>
@@ -98,7 +98,7 @@
                     maxlength="300"></textarea>
         </fieldset>
 
-        <button type="submit">Send Request</button>
+        <button type="submit">Check Request</button>
         <p id="form-status" class="status-message" aria-live="polite"></p>
       </form>
     </section>
